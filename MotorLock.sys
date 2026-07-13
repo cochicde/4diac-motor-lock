@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System Name="MotorLock">
+	<VersionInfo Version="1.0" Author="cochicde" Date="2026-07-05">
+	</VersionInfo>
+	<CompilerInfo>
+	</CompilerInfo>
+	<Application Name="MotorsController">
+		<SubAppNetwork>
+			<FB Name="StartMotor1" Type="iec61499::net::SUBSCRIBE_1" x="-2400" y="-400">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::controller_desiredMotor1_ID"/>
+			</FB>
+			<FB Name="Motor1" Type="iec61499::net::PUBLISH_1" x="5500" y="-200">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::controller_Motor1_Status"/>
+			</FB>
+			<FB Name="Motor2" Type="iec61499::net::PUBLISH_1" x="5700" y="2200">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::controller_Motor2_Status"/>
+			</FB>
+			<FB Name="Motor1CurrentState" Type="iec61499::events::E_SR" x="3400" y="-100">
+			</FB>
+			<FB Name="Motor2CurrentState" Type="iec61499::events::E_SR" x="3500" y="2300">
+			</FB>
+			<FB Name="StartMotor2" Type="iec61499::net::SUBSCRIBE_1" x="-2100" y="2500">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::controller_desiredMotor2_ID"/>
+			</FB>
+			<FB Name="AllowOnlyIfMotor2Off" Type="iec61499::events::E_PERMIT" x="1800" y="-900">
+			</FB>
+			<FB Name="AllowOnlyIfMotor1Off" Type="iec61499::events::E_PERMIT" x="2100" y="1900">
+			</FB>
+			<FB Name="IsMotor2Off" Type="iec61131::bitwiseOperators::F_NOT" x="800" y="-900">
+			</FB>
+			<FB Name="IsMotor1Off" Type="iec61131::bitwiseOperators::F_NOT" x="800" y="1900">
+			</FB>
+			<FB Name="StopApplication" Type="eclipse4diac::utils::STEST_END" x="8300" y="1200">
+			</FB>
+			<FB Name="AreBothOn" Type="iec61131::bitwiseOperators::AND_2" x="6300" y="1100">
+			</FB>
+			<FB Name="Assert" Type="iec61499::events::E_PERMIT" x="7300" y="1100">
+			</FB>
+			<FB Name="TurnMotor1OnOff" Type="iec61499::events::E_SWITCH" x="-600" y="-100">
+			</FB>
+			<FB Name="TurnMotor2OnOff" Type="iec61499::events::E_SWITCH" x="-500" y="2600">
+			</FB>
+			<EventConnections>
+				<Connection Source="Motor2CurrentState.EO" Destination="Motor2.REQ"/>
+				<Connection Source="AllowOnlyIfMotor2Off.EO" Destination="Motor1CurrentState.S" dx1="558.82"/>
+				<Connection Source="Motor1CurrentState.EO" Destination="Motor1.REQ"/>
+				<Connection Source="AllowOnlyIfMotor1Off.EO" Destination="Motor2CurrentState.S" dx1="205.88"/>
+				<Connection Source="IsMotor2Off.CNF" Destination="AllowOnlyIfMotor2Off.EI"/>
+				<Connection Source="IsMotor1Off.CNF" Destination="AllowOnlyIfMotor1Off.EI"/>
+				<Connection Source="Motor1CurrentState.EO" Destination="AreBothOn.REQ" dx1="505.88"/>
+				<Connection Source="Motor2CurrentState.EO" Destination="AreBothOn.REQ" dx1="505.88"/>
+				<Connection Source="Assert.EO" Destination="StopApplication.REQ" dx1="182.35"/>
+				<Connection Source="AreBothOn.CNF" Destination="Assert.EI"/>
+				<Connection Source="Motor1.INITO" Destination="Motor2.INIT" dx1="70.59" dx2="70.59" dy="970.59"/>
+				<Connection Source="StartMotor1.INITO" Destination="Motor1.INIT" dx1="6694.12"/>
+				<Connection Source="StartMotor1.IND" Destination="TurnMotor1OnOff.EI" dx1="411.76"/>
+				<Connection Source="TurnMotor1OnOff.EO1" Destination="IsMotor2Off.REQ" dx1="341.18"/>
+				<Connection Source="TurnMotor1OnOff.EO0" Destination="Motor1CurrentState.R" dx1="1935.29"/>
+				<Connection Source="StartMotor1.INITO" Destination="StartMotor2.INIT" dx1="70.59" dx2="70.59" dy="1247.06"/>
+				<Connection Source="StartMotor2.IND" Destination="TurnMotor2OnOff.EI"/>
+				<Connection Source="TurnMotor2OnOff.EO1" Destination="IsMotor1Off.REQ" dx1="341.18"/>
+				<Connection Source="TurnMotor2OnOff.EO0" Destination="Motor2CurrentState.R" dx1="2952.94"/>
+			</EventConnections>
+			<DataConnections>
+				<Connection Source="Motor2CurrentState.Q" Destination="Motor2.SD_1" dx1="758.82"/>
+				<Connection Source="Motor1CurrentState.Q" Destination="Motor1.SD_1" dx1="847.06"/>
+				<Connection Source="Motor2CurrentState.Q" Destination="IsMotor2Off.IN" dx1="364.71" dx2="205.88" dy="617.65"/>
+				<Connection Source="Motor1CurrentState.Q" Destination="IsMotor1Off.IN" dx1="282.35" dx2="70.59" dy="900"/>
+				<Connection Source="Motor1CurrentState.Q" Destination="AreBothOn.IN1" dx1="694.12"/>
+				<Connection Source="Motor2CurrentState.Q" Destination="AreBothOn.IN2" dx1="676.47"/>
+				<Connection Source="StartMotor2.RD_1" Destination="TurnMotor2OnOff.G" dx1="311.76"/>
+				<Connection Source="IsMotor2Off.OUT" Destination="AllowOnlyIfMotor2Off.PERMIT"/>
+				<Connection Source="IsMotor1Off.OUT" Destination="AllowOnlyIfMotor1Off.PERMIT"/>
+				<Connection Source="AreBothOn.OUT" Destination="Assert.PERMIT"/>
+				<Connection Source="StartMotor1.RD_1" Destination="TurnMotor1OnOff.G" dx1="200"/>
+			</DataConnections>
+		</SubAppNetwork>
+	</Application>
+	<Application Name="UserSimulator">
+		<SubAppNetwork>
+			<FB Name="StartMotor1" Type="iec61499::net::CLIENT_1_0" x="11400" y="-400">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::user_desiredMotor1_ID"/>
+			</FB>
+			<FB Name="StartMotor2" Type="iec61499::net::CLIENT_1_0" x="11400" y="1400">
+				<Parameter Name="QI" Value="BOOL#TRUE"/>
+				<Parameter Name="ID" Value="OPCUA::user_desiredMotor2_ID"/>
+			</FB>
+			<SubApp Name="TriggerMotor1AndMotor2" Type="TrigerDelayTrigger" x="700" y="-1000">
+				<Parameter Name="DI1" Value="T#1s"/>
+			</SubApp>
+			<SubApp Name="TriggerMotor2StopMotor1" Type="TrigerDelayTrigger" x="2100" y="-400">
+				<Parameter Name="DI1" Value="T#1s"/>
+			</SubApp>
+			<SubApp Name="TrigerDelayTrigger" Type="TrigerDelayTrigger" x="600" y="1300">
+				<Parameter Name="DI1" Value="T#1s"/>
+			</SubApp>
+			<SubApp Name="TrigerDelayTrigger_1" Type="TrigerDelayTrigger" x="2100" y="2100">
+				<Parameter Name="DI1" Value="T#1s"/>
+			</SubApp>
+			<FB Name="FastStart" Type="iec61499::events::E_SPLIT" x="5300" y="3900">
+			</FB>
+			<FB Name="E_CTU_2" Type="iec61499::events::E_CTU" x="1000" y="4200">
+				<Parameter Name="PV" Value="UINT#100"/>
+			</FB>
+			<SubApp Name="TrigerDelayTrigger_2" Type="TrigerDelayTrigger" x="3300" y="4200">
+				<Parameter Name="DI1" Value="T#500ms"/>
+			</SubApp>
+			<FB Name="E_SWITCH_2" Type="iec61499::events::E_SWITCH" x="2000" y="4300">
+			</FB>
+			<SubApp Name="TrigerDelayTrigger_3" Type="TrigerDelayTrigger" x="5200" y="4500">
+				<Parameter Name="DI1" Value="T#500ms"/>
+			</SubApp>
+			<FB Name="DesiredState1" Type="iec61499::events::E_SR" x="9200" y="-200">
+			</FB>
+			<FB Name="DesiredState2" Type="iec61499::events::E_SR" x="9200" y="1800">
+			</FB>
+			<FB Name="E_DELAY" Type="iec61499::events::E_DELAY" x="-300" y="1000">
+				<Parameter Name="DT" Value="T#1s"/>
+			</FB>
+			<FB Name="E_DELAY_1" Type="iec61499::events::E_DELAY" x="-700" y="3600">
+				<Parameter Name="DT" Value="T#1s"/>
+			</FB>
+			<EventConnections>
+				<Connection Source="TriggerMotor1AndMotor2.E1" Destination="DesiredState1.S" dx1="3335.29"/>
+				<Connection Source="TriggerMotor1AndMotor2.E2" Destination="TriggerMotor2StopMotor1.REQ" dx1="147.06"/>
+				<Connection Source="TriggerMotor2StopMotor1.E1" Destination="DesiredState2.S" dx1="1358.82"/>
+				<Connection Source="TriggerMotor2StopMotor1.E2" Destination="DesiredState1.R" dx1="752.94"/>
+				<Connection Source="TriggerMotor2StopMotor1.E2" Destination="E_DELAY.START" dx1="70.59" dx2="70.59" dy="500"/>
+				<Connection Source="TrigerDelayTrigger.E1" Destination="DesiredState2.S" dx1="2882.35"/>
+				<Connection Source="TrigerDelayTrigger.E2" Destination="TrigerDelayTrigger_1.REQ" dx1="200"/>
+				<Connection Source="TrigerDelayTrigger_1.E1" Destination="DesiredState1.S" dx1="1941.18"/>
+				<Connection Source="TrigerDelayTrigger_1.E2" Destination="DesiredState2.R" dx1="752.94"/>
+				<Connection Source="TrigerDelayTrigger_1.E2" Destination="E_DELAY_1.START" dx1="70.59" dx2="70.59" dy="700"/>
+				<Connection Source="E_CTU_2.CUO" Destination="E_SWITCH_2.EI" dx1="329.41"/>
+				<Connection Source="TrigerDelayTrigger_2.E1" Destination="FastStart.EI" dx1="452.94"/>
+				<Connection Source="TrigerDelayTrigger_2.E2" Destination="TrigerDelayTrigger_3.REQ" dx1="400"/>
+				<Connection Source="E_SWITCH_2.EO0" Destination="TrigerDelayTrigger_2.REQ" dx1="335.29"/>
+				<Connection Source="TrigerDelayTrigger_3.E1" Destination="DesiredState2.R" dx1="1147.06"/>
+				<Connection Source="TrigerDelayTrigger_3.E1" Destination="DesiredState1.R" dx1="1147.06"/>
+				<Connection Source="TrigerDelayTrigger_3.E2" Destination="E_CTU_2.CU" dx1="70.59" dx2="476.47" dy="735.29"/>
+				<Connection Source="FastStart.EO1" Destination="DesiredState1.S" dx1="1358.82"/>
+				<Connection Source="FastStart.EO2" Destination="DesiredState2.S" dx1="1358.82"/>
+				<Connection Source="DesiredState1.EO" Destination="StartMotor1.REQ" dx1="835.29"/>
+				<Connection Source="DesiredState2.EO" Destination="StartMotor2.REQ" dx1="835.29"/>
+				<Connection Source="StartMotor1.INITO" Destination="StartMotor2.INIT" dx1="70.59" dx2="70.59" dy="900"/>
+				<Connection Source="StartMotor2.INITO" Destination="TriggerMotor1AndMotor2.REQ" dx1="635.29" dx2="811.76" dy="-2870.59"/>
+				<Connection Source="E_DELAY.EO" Destination="TrigerDelayTrigger.REQ" dx1="152.94"/>
+				<Connection Source="E_DELAY_1.EO" Destination="E_CTU_2.CU" dx1="552.94"/>
+			</EventConnections>
+			<DataConnections>
+				<Connection Source="E_CTU_2.Q" Destination="E_SWITCH_2.G" dx1="258.82"/>
+				<Connection Source="DesiredState1.Q" Destination="StartMotor1.SD_1"/>
+				<Connection Source="DesiredState2.Q" Destination="StartMotor2.SD_1" dx1="835.29"/>
+			</DataConnections>
+		</SubAppNetwork>
+	</Application>
+	<Device Name="Controller" Type="iec61499::system::FORTE_PC" x="2241.18" y="1247.06">
+		<Parameter Name="MGR_ID" Value="&quot;localhost:61499&quot;" Comment="Device manager socket ID"/>
+		<Attribute Name="Profile" Type="STRING" Value="HOLOBLOC"/>
+		<Attribute Name="Color" Type="STRING" Value="255,190,111"/>
+		<Resource Name="EMB_RES" Type="iec61499::system::EMB_RES" x="0" y="0">
+			<FBNetwork>
+				<EventConnections>
+					<Connection Source="START.COLD" Destination="MotorsController.StartMotor1.INIT" dx1="364.71"/>
+					<Connection Source="START.WARM" Destination="MotorsController.StartMotor1.INIT" dx1="364.71"/>
+				</EventConnections>
+			</FBNetwork>
+		</Resource>
+	</Device>
+	<Device Name="UserSimulator" Type="iec61499::system::FORTE_PC" x="4670.59" y="1352.94">
+		<Parameter Name="MGR_ID" Value="&quot;localhost:61500&quot;" Comment="Device manager socket ID"/>
+		<Attribute Name="Profile" Type="STRING" Value="HOLOBLOC"/>
+		<Attribute Name="Color" Type="STRING" Value="218,66,51"/>
+		<Resource Name="EMB_RES" Type="iec61499::system::EMB_RES" x="0" y="0">
+			<FBNetwork>
+				<EventConnections>
+					<Connection Source="START.COLD" Destination="UserSimulator.StartMotor1.INIT" dx1="4964.71"/>
+					<Connection Source="START.WARM" Destination="UserSimulator.StartMotor1.INIT" dx1="4964.71"/>
+				</EventConnections>
+			</FBNetwork>
+		</Resource>
+	</Device>
+	<Mapping From="MotorsController.StartMotor1" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.Motor1" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.Motor2" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.Motor1CurrentState" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.Motor2CurrentState" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.StartMotor2" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.AllowOnlyIfMotor2Off" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.AllowOnlyIfMotor1Off" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.IsMotor2Off" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.IsMotor1Off" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.StopApplication" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.AreBothOn" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.Assert" To="Controller.EMB_RES"/>
+	<Mapping From="UserSimulator.StartMotor1" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.StartMotor2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.FastStart" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TrigerDelayTrigger_2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TrigerDelayTrigger_3" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TriggerMotor1AndMotor2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TrigerDelayTrigger_1" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TriggerMotor2StopMotor1" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.TrigerDelayTrigger" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.E_SWITCH_2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.E_CTU_2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="MotorsController.TurnMotor2OnOff" To="Controller.EMB_RES"/>
+	<Mapping From="MotorsController.TurnMotor1OnOff" To="Controller.EMB_RES"/>
+	<Mapping From="UserSimulator.DesiredState1" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.DesiredState2" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.E_DELAY" To="UserSimulator.EMB_RES"/>
+	<Mapping From="UserSimulator.E_DELAY_1" To="UserSimulator.EMB_RES"/>
+</System>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GlobalConstants Name="OPCUA" Comment="Global constants">
+	<Identification Standard="61499-1">
+	</Identification>
+	<VersionInfo Version="1.0" Author="cochicde" Date="2026-07-05">
+	</VersionInfo>
+	<CompilerInfo>
+	</CompilerInfo>
+	<GlobalConstants>
+		<VarDeclaration Name="desiredMotor1_ID" Type="WSTRING" InitialValue="&quot;/Objects/Motor1/DesiredState&quot;"/>
+		<VarDeclaration Name="desiredMotor2_ID" Type="WSTRING" InitialValue="&quot;/Objects/Motor2/DesiredState&quot;"/>
+		<VarDeclaration Name="Motor1_Status" Type="WSTRING" InitialValue="&quot;/Objects/Motor1/State&quot;"/>
+		<VarDeclaration Name="Motor2_Status" Type="WSTRING" Comment="user OPCUA" InitialValue="&quot;/Objects/Motor2/State&quot;"/>
+		<VarDeclaration Name="user_desiredMotor1_ID" Type="WSTRING" InitialValue="&quot;opc_ua[WRITE;opc.tcp://127.0.0.1:4840#;/Objects/Motor1/DesiredState]&quot;"/>
+		<VarDeclaration Name="user_desiredMotor2_ID" Type="WSTRING" Comment="controller OPCUA" InitialValue="&quot;opc_ua[WRITE;opc.tcp://127.0.0.1:4840#;/Objects/Motor2/DesiredState]&quot;"/>
+		<VarDeclaration Name="controller_desiredMotor1_ID" Type="WSTRING" InitialValue="&quot;opc_ua[READ;/Objects/Motor1/DesiredState]&quot;"/>
+		<VarDeclaration Name="controller_desiredMotor2_ID" Type="WSTRING" InitialValue="&quot;opc_ua[READ;/Objects/Motor2/DesiredState]&quot;"/>
+		<VarDeclaration Name="controller_Motor1_Status" Type="WSTRING" InitialValue="&quot;opc_ua[WRITE;/Objects/Motor1/State]&quot;"/>
+		<VarDeclaration Name="controller_Motor2_Status" Type="WSTRING" InitialValue="&quot;opc_ua[WRITE;/Objects/Motor2/State]&quot;"/>
+	</GlobalConstants>
+	<OriginalSource><![CDATA[GLOBALCONSTANTS OPCUA
+	VAR_GLOBAL CONSTANT
+		desiredMotor1_ID : WSTRING := "/Objects/Motor1/DesiredState";
+		desiredMotor2_ID : WSTRING := "/Objects/Motor2/DesiredState";
+		Motor1_Status : WSTRING := "/Objects/Motor1/State";
+		Motor2_Status : WSTRING := "/Objects/Motor2/State";
+
+		// user OPCUA
+		user_desiredMotor1_ID : WSTRING := "opc_ua[WRITE;opc.tcp://127.0.0.1:4840#;/Objects/Motor1/DesiredState]";
+		user_desiredMotor2_ID : WSTRING := "opc_ua[WRITE;opc.tcp://127.0.0.1:4840#;/Objects/Motor2/DesiredState]";
+
+		// controller OPCUA
+		controller_desiredMotor1_ID : WSTRING := "opc_ua[READ;/Objects/Motor1/DesiredState]";
+		controller_desiredMotor2_ID : WSTRING := "opc_ua[READ;/Objects/Motor2/DesiredState]";
+		controller_Motor1_Status : WSTRING := "opc_ua[WRITE;/Objects/Motor1/State]";
+		controller_Motor2_Status : WSTRING := "opc_ua[WRITE;/Objects/Motor2/State]";
+
+	END_VAR
+
+END_GLOBALCONSTANTS
+
+]]></OriginalSource>
+</GlobalConstants>

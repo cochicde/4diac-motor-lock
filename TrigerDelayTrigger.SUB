@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SubAppType Name="TrigerDelayTrigger" Comment="Subapplication Type">
+	<Identification Standard="61499-2">
+	</Identification>
+	<VersionInfo Version="1.0" Author="cochicde" Date="2026-07-05">
+	</VersionInfo>
+	<CompilerInfo>
+	</CompilerInfo>
+	<SubAppInterfaceList>
+		<SubAppEventInputs>
+			<SubAppEvent Name="REQ" Type="Event">
+			</SubAppEvent>
+		</SubAppEventInputs>
+		<SubAppEventOutputs>
+			<SubAppEvent Name="E1" Type="Event">
+			</SubAppEvent>
+			<SubAppEvent Name="E2" Type="Event">
+			</SubAppEvent>
+		</SubAppEventOutputs>
+		<InputVars>
+			<VarDeclaration Name="DI1" Type="TIME"/>
+		</InputVars>
+	</SubAppInterfaceList>
+	<SubAppNetwork>
+		<FB Name="E_DELAY" Type="iec61499::events::E_DELAY" x="0" y="0">
+		</FB>
+		<EventConnections>
+			<Connection Source="REQ" Destination="E1"/>
+			<Connection Source="REQ" Destination="E_DELAY.START" dx1="1076.47"/>
+			<Connection Source="E_DELAY.EO" Destination="E2" dx1="1952.94"/>
+		</EventConnections>
+		<DataConnections>
+			<Connection Source="DI1" Destination="E_DELAY.DT" dx1="1076.47"/>
+		</DataConnections>
+	</SubAppNetwork>
+</SubAppType>
